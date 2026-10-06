@@ -8,7 +8,7 @@
 ### Instalação
 1. Clone o repositório colando este código
    ```bash
-   git clone (https://github.com/Lunvick/projeto-integrador-final.git)
+   git clone https://github.com/Lunvick/projeto-integrador-final.git
    
 2. Crie uma branch, antes de iniciar seu trabalho
    ```bash
