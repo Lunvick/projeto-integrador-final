@@ -6,6 +6,6 @@
 - Node.js instalado (versão 18 ou superior)
 
 ### Instalação
-1. Clone o repositório:
+1. Clone o repositório colando este código
    ```bash
-   git clone <URL_DO_REPOSITORIO>
+   git clone (https://github.com/Lunvick/projeto-integrador-final.git)
