@@ -1,12 +1,12 @@
-#Sistema de Reservas & Agendamentos - Grupo 2
+##Sistema de Reservas & Agendamentos - Grupo 2
 
-## Este repositório contém a implementação e a suíte de testes unitários automatizados para o backend do Sistema de Gestão & Agendamento de reservas de salas/recursos. 
+# Este repositório contém a implementação e a suíte de testes unitários automatizados para o backend do Sistema de Gestão & Agendamento de reservas de salas/recursos. 
 
-#Visão Geral do Sistema: 
+##Visão Geral do Sistema: 
 
-## O sistema consiste num Serviço de Gestão e Agendamento de Reservas de Espaços/Salas, responsável por controlar a criação, validação de disponibilidade e cancelamento com reembolso de reservas. 
+# O sistema consiste num Serviço de Gestão e Agendamento de Reservas de Espaços/Salas, responsável por controlar a criação, validação de disponibilidade e cancelamento com reembolso de reservas. 
 
-#Regras do Negócio: 
+##Regras do Negócio: 
 
 ### Campos Obrigatórios: 
 ## Campos obrigatórios para o processamento de dados essenciais para o agendamento (roomId, userId, startTime, endTime, guestCount).
