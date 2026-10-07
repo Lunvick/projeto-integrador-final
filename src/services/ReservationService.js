@@ -62,7 +62,7 @@ export class ReservationService {
     });
   }
 
-  async cancelReservation(reservationId) {
+  async cancelReservation(reservationId, cancelDate = new Date()) {
     const reservation = await this.reservationRepository.findById(reservationId);
 
     if (!reservation) {
@@ -73,15 +73,7 @@ export class ReservationService {
       throw new Error("A reserva já está cancelada.");
     }
 
-    const cancelledReservation = {
-      ...reservation,
-      status: "CANCELLED",
-    };
-
-    await this.paymentService.refund(reservation, 100);
-    await this.reservationRepository.save(cancelledReservation);
-    await this.notificationService.send(cancelledReservation);
-
-    return cancelledReservation;
-  }
-}
+    // Cálculo da antecedência do cancelamento em horas
+    const reservationStart = new Date(reservation.startTime);
+    const cancellationTime = new Date(cancelDate);
+    const hoursDifference = (reservationStart.getTime() - cancellationTime.getTime()) / (1000 * 60 * 60);
