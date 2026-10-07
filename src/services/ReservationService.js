@@ -89,45 +89,15 @@ export class ReservationService {
       throw new Error("A reserva já está cancelada.");
     }
 
-    const reservationStart = new Date(reservation.startTime);
-    const cancellationTime = new Date(cancelDate);
-    const hoursDifference = (reservationStart.getTime() - cancellationTime.getTime()) / (1000 * 60 * 60);
-
-    // Impedir cancelamento no passado/concluído
-    if (reservation.status === "COMPLETED" || hoursDifference <= 0) {
-      throw new Error("Não é possível cancelar uma reserva já concluída ou em andamento.");
-    }
-
-    // Reembolso dinâmico (24h)
-    let refundPercentage = 100;
-    let cancellationFee = 0;
-
-    if (hoursDifference < 24) {
-      refundPercentage = 50;
-      cancellationFee = 50;
-    }
-
     const cancelledReservation = {
       ...reservation,
       status: "CANCELLED",
-      refundPercentage,
-      cancellationFee,
-      cancelledAt: cancellationTime,
     };
 
-    if (this.paymentService) {
-      await this.paymentService.refund(cancelledReservation, refundPercentage);
-    }
+    await this.paymentService.refund(reservation, 100);
+    await this.reservationRepository.save(cancelledReservation);
+    await this.notificationService.send(cancelledReservation);
 
-    const updatedReservation = await this.reservationRepository.save(cancelledReservation);
-
-    if (this.notificationService) {
-      await this.notificationService.send({
-        ...updatedReservation,
-        message: `Sua reserva foi cancelada com sucesso. Reembolso: ${refundPercentage}%.`,
-      });
-    }
-
-    return updatedReservation;
+    return cancelledReservation;
   }
 }
