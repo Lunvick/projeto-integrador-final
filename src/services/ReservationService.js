@@ -78,7 +78,7 @@ export class ReservationService {
     });
   }
 
-  async cancelReservation(reservationId, cancelDate = new Date()) {
+ async cancelReservation(reservationId, cancelDate = new Date()) {
     const reservation = await this.reservationRepository.findById(reservationId);
 
     if (!reservation) {
@@ -89,15 +89,28 @@ export class ReservationService {
       throw new Error("A reserva já está cancelada.");
     }
 
+    const startTime = new Date(reservation.startTime);
+    const now = new Date(cancelDate);
+
+    // Validação: Não pode cancelar se já concluiu ou está em andamento
+    if (now >= startTime) {
+      throw new Error("Não é possível cancelar uma reserva já concluída ou em andamento.");
+    }
+
+    // Cálculo da diferença em horas
+    const diffInHours = (startTime.getTime() - now.getTime()) / (1000 * 60 * 60);
+
+    // Regra de reembolso: > 24h = 100%, <= 24h = 50%
+    const refundPercentage = diffInHours > 24 ? 100 : 50;
+
     const cancelledReservation = {
       ...reservation,
       status: "CANCELLED",
     };
 
-    await this.paymentService.refund(reservation, 100);
+    await this.paymentService.refund(reservation, refundPercentage);
     await this.reservationRepository.save(cancelledReservation);
     await this.notificationService.send(cancelledReservation);
 
     return cancelledReservation;
-  }
-}
+  }};
