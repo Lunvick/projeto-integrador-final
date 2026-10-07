@@ -99,3 +99,18 @@ export class ReservationService {
     if (this.paymentService) {
       await this.paymentService.refund(cancelledReservation, refundPercentage);
     }
+
+    // Persistência do estado atualizado no repositório
+    const updatedReservation = await this.reservationRepository.save(cancelledReservation);
+
+    // Envio de notificação assíncrona ao usuário
+    if (this.notificationService) {
+      await this.notificationService.send({
+        ...updatedReservation,
+        message: `Sua reserva foi cancelada com sucesso. Reembolso: ${refundPercentage}%.`,
+      });
+    }
+
+    return updatedReservation;
+  }
+}
