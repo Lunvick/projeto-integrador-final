@@ -62,7 +62,7 @@ export class ReservationService {
     });
   }
 
-  async cancelReservation(reservationId) {
+  async cancelReservation(reservationId, cancelDate = new Date()) {
     const reservation = await this.reservationRepository.findById(reservationId);
 
     if (!reservation) {
@@ -73,15 +73,44 @@ export class ReservationService {
       throw new Error("A reserva já está cancelada.");
     }
 
+    // Cálculo da antecedência do cancelamento em horas
+    const reservationStart = new Date(reservation.startTime);
+    const cancellationTime = new Date(cancelDate);
+    const hoursDifference = (reservationStart.getTime() - cancellationTime.getTime()) / (1000 * 60 * 60);
+
+    // Regra da taxa dinâmica: >= 24h = 100% de reembolso / < 24h = 50% de reembolso (retenção de taxa)
+    let refundPercentage = 100;
+    let cancellationFee = 0;
+
+    if (hoursDifference < 24) {
+      refundPercentage = 50;
+      cancellationFee = 50;
+    }
+
     const cancelledReservation = {
       ...reservation,
       status: "CANCELLED",
+      refundPercentage,
+      cancellationFee,
+      cancelledAt: cancellationTime,
     };
 
-    await this.paymentService.refund(reservation, 100);
-    await this.reservationRepository.save(cancelledReservation);
-    await this.notificationService.send(cancelledReservation);
+    // Processamento de reembolso via PaymentService
+    if (this.paymentService) {
+      await this.paymentService.refund(cancelledReservation, refundPercentage);
+    }
 
-    return cancelledReservation;
+    // Persistência do estado atualizado no repositório
+    const updatedReservation = await this.reservationRepository.save(cancelledReservation);
+
+    // Envio de notificação assíncrona ao usuário
+    if (this.notificationService) {
+      await this.notificationService.send({
+        ...updatedReservation,
+        message: `Sua reserva foi cancelada com sucesso. Reembolso: ${refundPercentage}%.`,
+      });
+    }
+
+    return updatedReservation;
   }
 }
