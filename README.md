@@ -1,6 +1,6 @@
 ## Sistema de Reservas & Agendamentos - Grupo 2
 
-# Este repositório contém a implementação e a suíte de testes unitários automatizados para o backend do Sistema de Gestão & Agendamento de reservas de salas/recursos. 
+Este repositório contém a implementação e a suíte de testes unitários automatizados para o backend do Sistema de Gestão & Agendamento de reservas de salas/recursos. 
 
 ## Visão Geral do Sistema: 
 
