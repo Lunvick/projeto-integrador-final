@@ -1,8 +1,16 @@
 export class ReservationService {
-  constructor({ reservationRepository, roomRepository }) {
+  constructor({
+    reservationRepository,
+    roomRepository,
+    paymentService,
+    notificationService,
+  }) {
     this.reservationRepository = reservationRepository;
     this.roomRepository = roomRepository;
+    this.paymentService = paymentService;
+    this.notificationService = notificationService;
   }
+
   async createReservation(reservationData) {
     const { roomId, userId, startTime, endTime, guestCount } = reservationData;
 
@@ -52,5 +60,28 @@ export class ReservationService {
       status: "CONFIRMED",
       createdAt: new Date(),
     });
+  }
+
+  async cancelReservation(reservationId) {
+    const reservation = await this.reservationRepository.findById(reservationId);
+
+    if (!reservation) {
+      throw new Error("Reserva não encontrada.");
+    }
+
+    if (reservation.status === "CANCELLED") {
+      throw new Error("A reserva já está cancelada.");
+    }
+
+    const cancelledReservation = {
+      ...reservation,
+      status: "CANCELLED",
+    };
+
+    await this.paymentService.refund(reservation, 100);
+    await this.reservationRepository.save(cancelledReservation);
+    await this.notificationService.send(cancelledReservation);
+
+    return cancelledReservation;
   }
 }
