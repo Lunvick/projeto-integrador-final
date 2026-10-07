@@ -17,19 +17,19 @@ Garante que as datas sejam válidas e que a data/hora de início seja estritamen
 ### Bloqueio de Inadimplência: 
 Impede que utilizadores com pendências financeiras realizem reservas.
 
-## Política de Reembolso Dinâmico:
+### Política de Reembolso Dinâmico:
 100% de reembolso:
 Cancelamentos realizados com mais de 24 horas de antecedência/
 50% de reembolso: 
 Cancelamentos realizados com 24 horas ou menos de antecedência.
 
-## Prevenção de Overbooking:
+### Prevenção de Overbooking:
 Impede a reserva se houver sobreposição de horários com agendamentos já existentes na mesma sala.
 
-## Validação de Estado:
+### Validação de Estado:
 Impede a tentativa de cancelar reservas inexistentes ou que já se encontrem canceladas.
 
-## Restrição do Estado Atual:
+### Restrição do Estado Atual:
 Impede o cancelamento de reservas em andamento ou que já tenham sido concluídas (a data/hora do cancelamento deve ser anterior ao início da reserva).
 
 ### Arquitetura 
@@ -45,6 +45,27 @@ Contém as regras de negócio da aplicação (ex: ReservationService.js).
 
 ## tests/: 
 Ficheiros de teste unitário (*.test.js) associados aos serviços e factories.
+
+### Divisão de Responsabilidades da Equipe:
+
+## Luna Clara: 
+Configuração, Ambiente e Base do Projeto
+
+## Ana Julia Fonseca:
+Fábrica de Dados Sintéticos e Fakes (Factories) para os testes
+
+## Anna Luiza Rufino: 
+Criação de Reservas e Validação de Espaço (Core Service)
+
+## Ana Luysa Rodrigues: 
+Cancelamentos, Taxas e Mensageria (Core Service)
+
+
+
+
+
+
+
 
 
 ### Pré-requisitos
