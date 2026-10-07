@@ -77,3 +77,25 @@ export class ReservationService {
     const reservationStart = new Date(reservation.startTime);
     const cancellationTime = new Date(cancelDate);
     const hoursDifference = (reservationStart.getTime() - cancellationTime.getTime()) / (1000 * 60 * 60);
+
+    // Regra da taxa dinâmica: >= 24h = 100% de reembolso / < 24h = 50% de reembolso (retenção de taxa)
+    let refundPercentage = 100;
+    let cancellationFee = 0;
+
+    if (hoursDifference < 24) {
+      refundPercentage = 50;
+      cancellationFee = 50;
+    }
+
+    const cancelledReservation = {
+      ...reservation,
+      status: "CANCELLED",
+      refundPercentage,
+      cancellationFee,
+      cancelledAt: cancellationTime,
+    };
+
+    // Processamento de reembolso via PaymentService
+    if (this.paymentService) {
+      await this.paymentService.refund(cancelledReservation, refundPercentage);
+    }
