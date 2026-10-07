@@ -19,7 +19,7 @@ Impede que utilizadores com pendências financeiras realizem reservas.
 
 ## Política de Reembolso Dinâmico:
 100% de reembolso:
-Cancelamentos realizados com mais de 24 horas de antecedência.
+Cancelamentos realizados com mais de 24 horas de antecedência/
 50% de reembolso: 
 Cancelamentos realizados com 24 horas ou menos de antecedência.
 
@@ -31,6 +31,21 @@ Impede a tentativa de cancelar reservas inexistentes ou que já se encontrem can
 
 ## Restrição do Estado Atual:
 Impede o cancelamento de reservas em andamento ou que já tenham sido concluídas (a data/hora do cancelamento deve ser anterior ao início da reserva).
+
+### Arquitetura 
+
+## src/: 
+Pasta principal com o código-fonte da aplicação.  
+
+## factories/: 
+Contém criadores de objetos/dados (ex: reservationFactory.js), muito usados para gerar dados de teste ou instanciar objetos complexos.  
+
+## services/: 
+Contém as regras de negócio da aplicação (ex: ReservationService.js).   
+
+## tests/: 
+Ficheiros de teste unitário (*.test.js) associados aos serviços e factories.
+
 
 ### Pré-requisitos
 - Node.js instalado (versão 18 ou superior)
