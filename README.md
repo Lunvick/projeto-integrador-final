@@ -18,9 +18,9 @@ Garante que as datas sejam válidas e que a data/hora de início seja estritamen
 Impede que utilizadores com pendências financeiras realizem reservas.
 
 ## Política de Reembolso Dinâmico:
-## 100% de reembolso:
+100% de reembolso:
 Cancelamentos realizados com mais de 24 horas de antecedência.
-## 50% de reembolso: 
+50% de reembolso: 
 Cancelamentos realizados com 24 horas ou menos de antecedência.
 
 ## Prevenção de Overbooking:
